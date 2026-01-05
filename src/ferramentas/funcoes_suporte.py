@@ -4,9 +4,10 @@ modular.
 """
 
 import polars as pl
+from pathlib import Path
 
 
-def salvar_parquet(df: pl.DataFrame, file_name: str, path: str) -> None:
+def salvar_parquet(df: pl.DataFrame, file_name: str, path: Path) -> None:
     """
     Salva um DataFrame em um arquivo Parquet.
 
@@ -15,4 +16,5 @@ def salvar_parquet(df: pl.DataFrame, file_name: str, path: str) -> None:
         file_name (str): Nome do arquivo a ser salvo.
         path (str): Caminho onde o arquivo irá ser salvo.
     """
-    df.write_parquet(path + file_name)
+    path_with_file_name: Path = path / file_name
+    df.write_parquet(file=path_with_file_name)
