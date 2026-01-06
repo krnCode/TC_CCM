@@ -81,8 +81,6 @@ with st.expander(
         with st.expander("SEVERIDADE: CRÍTICO", expanded=False):
             st.write(
                 """
-                **SEVERIDADE: CRÍTICO**
-
                 Impactam diretamente em KPIs e decisões de negócio.
 
                 * Peças em estoque com valor de R$ 0,01;
@@ -91,6 +89,15 @@ with st.expander(
                 mais de 10 anos atrás - 2000-01-01 (data errada ou compras de peças que 
                 não tem movimentação?);
                 * Obsolescência elevada em estoque (avaliar impacto financeiro);
+            """
+            )
+
+        with st.expander("SEVERIDADE: MÉDIA", expanded=False):
+            st.write(
+                """
+                Impacta em análises específicas.
+
+                * Categorias não estão padronizadas;
             """
             )
 # endregion
@@ -114,8 +121,8 @@ with st.expander(
                 Impactam diretamente em KPIs e decisões de negócio.
 
                 * Colunas de data de entrada no estoque triplicadas com datas diferentes 
-                , e alguns registros tem divergência no mês de entrada, e isso impacta em 
-                reconhecimento por competência - necessário ajustar;
+                , e alguns registros tem divergência no mês de entrada, e isso impacta  
+                em reconhecimento por competência - necessário ajustar;
                 """
             )
 
@@ -136,8 +143,6 @@ with st.expander(
         with st.expander("SEVERIDADE: BAIXA", expanded=False):
             st.write(
                 """
-                **SEVERIDADE: BAIXA**
-
                 Não tem impacto relevante, mas demonstram pequenos problemas de controle 
                 interno.
 
@@ -203,8 +208,8 @@ with st.expander(
                     * Itens mais detalhados que outros;
                     * Descrições completas e abreviadas para o mesmo serviço;
                 * Várias categorias para o mesmo serviço com nomes diferentes;
-                * Informado situação da OS como "9" em todas as OS, mas há a descrição 
-                desta situação;
+                * Informado situação da OS como "9" em todas as OS, mas não há a 
+                descrição desta situação;
                 """
             )
 # endregion
@@ -258,23 +263,47 @@ with st.expander(
 
     with col2:
         st.subheader("Avaliação inicial")
-        st.write(
-            """
-            * Códigos de filial como datas;
-            * Devoluções em que o valor do lucro é positivo;
-            * Devoluções sem informação específica de  marca, modelo, familia, categoria
-            , etc;
-            * Lançamentos de devoluções duplicados;
-            * Lançamentos repetidos da mesma venda, e sem informação do tipo de venda;
-            * Informação de cor do veículo como "1";
-            * Lançamentos com tipo de combustível como "NAO ESPECIFICADO";
-            * Lançamentos sem o ano modelo do veículo;
-            * Lançamentos sem o ano de fabricação do veículo;
-            * Inconsistências na coluna de dias em estoque:
-                * Lançado código ao invés de dias;
-                * Dias negativos em estoque;
-        """
-        )
+        with st.expander("SEVERIDADE: CRÍTICO", expanded=False):
+            st.write(
+                """
+                Impactam diretamente em KPIs e decisões de negócio.
+
+                * Códigos de filial como datas;
+                * Devoluções em que o valor do lucro é positivo;
+                * Devoluções sem informação específica de marca, modelo, familia, 
+                categoria, etc;
+                * Lançamentos de devoluções duplicados;
+                * Lançamentos repetidos da mesma venda, e sem informação do tipo de 
+                venda;
+                * Inconsistências na coluna de dias em estoque:
+                    * Lançado código ao invés de dias;
+                    * Dias negativos em estoque;
+                """
+            )
+
+        with st.expander("SEVERIDADE: MÉDIA", expanded=False):
+            st.write(
+                """
+                Impacta em análises específicas.
+
+                * Lançamentos com tipo de combustível como "NAO ESPECIFICADO";
+                * Lançamentos sem o ano modelo do veículo;
+                * Lançamentos sem o ano de fabricação do veículo;
+                * Inconsistências na coluna de dias em estoque:
+                    * Lançado código ao invés de dias;
+                    * Dias negativos em estoque;
+                """
+            )
+
+        with st.expander("SEVERIDADE: BAIXA", expanded=False):
+            st.write(
+                """
+                Não tem impacto relevante, mas demonstram pequenos problemas de controle
+                interno.
+
+                * Informação de cor do veículo como "1";
+                """
+            )
 # endregion
 
 
