@@ -172,7 +172,7 @@ with st.expander(
                 """
             Impactam diretamente em KPIs e decisões de negócio.
 
-            * Filial CCM AUTOS 1 possui dois códigos diferentes (0-1-2 e 1-1-3);
+            * Filial CCM AUTOS 1 possui dois códigos diferentes (0-1-1 e 1-1-3);
             * Serviços com valor realizado menor que R$ 1,00;
             * Lucro de serviço realizado com valor negativo (-R$ 6.298,88);
             * Diversas descrições de serviços não são compatíveis com a categoria do 
@@ -232,7 +232,7 @@ with st.expander(
                 """
                 Impactam diretamente em KPIs e decisões de negócio.
                 
-                * Filial CCM AUTOS 1 possui dois códigos diferentes (0-1-2 e 1-1-3);
+                * Filial CCM AUTOS 1 possui dois códigos diferentes (0-1-1 e 1-1-3);
                 * Lançamentos de venda mas com quantidade vendida igual a zero;
                 * Lançamentos de venda com valor de custo igual a zero;
                 * Peças com custo zero;
