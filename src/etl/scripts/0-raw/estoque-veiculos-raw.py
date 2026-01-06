@@ -18,6 +18,7 @@ DATASETS_PATH: Path = Path(__file__).parent.parent.parent.parent / "datasets"
 estoque_veiculos_raw: pl.DataFrame = pl.read_csv(
     source=DATASETS_PATH / "estoque-atual-de-veiculos.csv",
     infer_schema=False,
+    separator=";",
 )
 # endregion
 
