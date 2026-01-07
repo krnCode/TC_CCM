@@ -9,6 +9,10 @@ import polars as pl
 
 from pathlib import Path
 from datetime import datetime
+from src.etl.schemas.historico_veiculos_schema import (
+    HISTORICO_VEICULOS_SCHEMA,
+)
+from src.ferramentas.funcoes_suporte import salvar_parquet
 
 
 # region ----- Caminho Arquivo Raw -----
@@ -23,6 +27,19 @@ RAW_FOLDER_PATH: Path = (
 RAW_DATA_FILE = os.listdir(RAW_FOLDER_PATH)[0]
 
 RAW_FILE_PATH = RAW_FOLDER_PATH / RAW_DATA_FILE
+# endregion
+
+
+# region ----- Caminho Arquivo Trusted -----
+TRUSTED_FOLDER_PATH: Path = (
+    Path(__file__).parent.parent.parent.parent
+    / "etl"
+    / "data"
+    / "1-trusted"
+    / "historico-venda-veiculos"
+)
+
+TRUSTED_FOLDER_PATH.mkdir(parents=True, exist_ok=True)
 # endregion
 
 
@@ -204,20 +221,75 @@ df_raw = df_raw.with_columns(
     )
 )
 
+# Classificar tipo da venda do veiculo 0 como NAO ESPECIFICADO
+df_raw = df_raw.with_columns(
+    pl.when(pl.col("Tipo_de_Venda_do_Veiculo") == "0")
+    .then(pl.lit("NAO ESPECIFICADO"))
+    .otherwise(pl.col("Tipo_de_Venda_do_Veiculo"))
+    .alias("Tipo_de_Venda_do_Veiculo_Ajustado")
+)
+
+
+# Classificar tipos de combustivel UNKOWN como NAO ESPECIFICADO
+df_raw = df_raw.with_columns(
+    pl.when(pl.col("Tipo_do_Combustivel") == "UNKNOWN")
+    .then(pl.lit("NAO ESPECIFICADO"))
+    .otherwise(pl.col("Tipo_do_Combustivel"))
+    .alias("Tipo_do_Combustivel_Ajustado")
+)
+
+
+# Classificar devoluções com lucro
+df_raw = df_raw.with_columns(
+    pl.when(
+        (pl.col("Lucro_da_Venda_Recalculado") > 0)
+        & (pl.col("Tipo_de_Venda_do_Veiculo_Ajustado") == "DEVOLUCAO")
+    )
+    .then(pl.lit("DEVOLUCAO COM LUCRO"))
+    .otherwise(pl.lit("OK"))
+    .alias("Lucro_da_Venda_Classificado")
+)
+
 
 # Classificar linhas como CONFIÁVEIS ou NÃO CONFIÁVEIS conforme a qualidade do registro
 df_raw = df_raw.with_columns(
     pl.when(
         (pl.col("Status_Duplicidade") == "OK")
         & (pl.col("Colunas_Deslocadas_e_Repetidas") == "OK")
+        & (pl.col("Lucro_da_Venda_Classificado") == "OK")
     )
     .then(pl.lit("CONFIÁVEL"))
     .otherwise(pl.lit("NÃO CONFIÁVEL"))
     .alias("Confiabilidade_do_Registro")
 )
 
-print(df_raw)
+# Renomear colunas para minusculas
+df_raw = df_raw.rename(str.lower)
 
+print(df_raw.columns)
 # endregion
 
-df_raw.write_excel(workbook="historico-venda-veiculos-trusted.xlsx")
+
+# df_raw.write_excel(workbook="historico-venda-veiculos-trusted.xlsx")
+
+
+# region ----- Salvar Arquivo Trusted -----
+# Salvar em um novo dataframe com os dados finais
+df_trusted: pl.DataFrame = pl.DataFrame(
+    data=df_raw,
+    schema=HISTORICO_VEICULOS_SCHEMA,
+)
+
+time_now: datetime = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+file_name_trusted: str = f"historico-venda-veiculos-trusted-{time_now}.parquet"
+
+
+salvar_parquet(
+    df=df_trusted,
+    path=TRUSTED_FOLDER_PATH,
+    file_name=file_name_trusted,
+)
+
+# file = os.listdir(TRUSTED_FOLDER_PATH)[0]
+# test: pl.DataFrame = pl.read_parquet(source=TRUSTED_FOLDER_PATH / file)
+# endregion
