@@ -1,5 +1,5 @@
 """
-Script de tratamento dos dados da camada Trusted do historico de serviços..
+Script de tratamento dos dados da camada Trusted do historico de serviços.
 
 Esta camada tem como objetivo a limpeza, padronização e tratamento dos dados brutos
 """
@@ -122,7 +122,7 @@ df_raw = df_raw.with_columns(
 )
 
 
-# Ajustar valor de revisões gratuitass que possuem valor acima de 0 para 0 (REVISÃO GRATUITA)
+# Ajustar valor de revisões gratuitas que possuem valor acima de 0 para 0 (REVISÃO GRATUITA)
 df_raw = df_raw.with_columns(
     pl.when(
         (pl.col("Categoria_Do_Servico_Padronizada") == "REVISÃO GRATUITA")
@@ -142,6 +142,7 @@ df_raw = df_raw.with_columns(
     .alias("Tempo_Do_Servico_Horas_Ajustado")
 )
 
+# Ajustar nome das colunas para estarem em minúsculo
 df_raw = df_raw.rename(str.lower)
 
 # endregion
