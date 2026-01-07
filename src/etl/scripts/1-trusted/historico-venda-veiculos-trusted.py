@@ -266,7 +266,7 @@ df_raw = df_raw.with_columns(
 # Renomear colunas para minusculas
 df_raw = df_raw.rename(str.lower)
 
-print(df_raw.columns)
+# print(df_raw.columns)
 # endregion
 
 
