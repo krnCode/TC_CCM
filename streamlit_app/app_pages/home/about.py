@@ -15,6 +15,8 @@ st.set_page_config(
 
 # region ----- Sobre o projeto -----
 st.title("Sobre")
+st.divider()
+
 st.write(
     """
         Olá, tudo bem?
@@ -27,7 +29,5 @@ st.write(
         e tratado.
 
         Para seguir, basta selecionar as páginas do menu à esquerda.
-
-        ---
     """
 )
