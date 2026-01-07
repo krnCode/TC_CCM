@@ -235,8 +235,8 @@ with st.expander(
                 * Filial CCM AUTOS 1 possui dois códigos diferentes (0-1-1 e 1-1-3);
                 * Lançamentos de venda mas com quantidade vendida igual a zero;
                 * Lançamentos de venda com valor de custo igual a zero;
-                * Peças com custo zero;
                 * Muitas vendas com perdas (avaliar impacto financeiro);
+                * Linhas com duplicidade total ou parcialmente duplicadas;
                 """
             )
 
@@ -245,7 +245,7 @@ with st.expander(
                 """
                 * Descrição das peças não segue um padrão;
                 * Categorias das peças possui diversas classificações para o mesmo tipo;
-                * Departamento possui 4 itens para peças;
+                * Há 4 departamentos para peças;
                 """
             )
 # endregion
