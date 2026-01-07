@@ -17,6 +17,7 @@ DATASETS_PATH: Path = Path(__file__).parent.parent.parent.parent / "datasets"
 # region ----- Ler dataset bruto -----
 venda_de_veiculos_raw: pl.DataFrame = pl.read_csv(
     source=DATASETS_PATH / "historico-de-vendas-de-veiculos.csv",
+    separator=";",
     infer_schema=False,
     truncate_ragged_lines=True,
 )
