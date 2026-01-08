@@ -55,6 +55,12 @@ pgs: dict = {
             page="./app_pages/camada_trusted/historico_venda_veiculos_trusted_page.py",
         ),
     ],
+    "CONSIDERAÇÕES FINAIS": [
+        st.Page(
+            title="Closing",
+            page="./app_pages/consideracoes_finais/closing.py",
+        ),
+    ],
 }
 
 pages = st.navigation(pgs)
