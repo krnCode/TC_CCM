@@ -57,7 +57,7 @@ st.write(
 
 
 # region ----- Tabela -----
-st.subheader("Tabela - Estoque de Peças")
+st.subheader("Tabela")
 df: pl.DataFrame = read_parquet()
 st.dataframe(df)
 st.divider()
@@ -65,7 +65,7 @@ st.divider()
 
 
 # region ----- Observações -----
-st.subheader("Observações - Estoque de Peças")
+st.subheader("Observações")
 
 col1, col2, col3, col4 = st.columns(spec=4, gap="small")
 with col1:
