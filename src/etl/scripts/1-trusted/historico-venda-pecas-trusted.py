@@ -201,24 +201,6 @@ df_raw = df_raw.with_columns(
     ]
 )
 
-# Classificar valor de custo desproporcionais
-df_raw = df_raw.with_columns(
-    pl.when((pl.col("Custo_da_Peca") > 400000) | (pl.col("Custo_da_Peca") == 0))
-    .then(pl.lit("VALOR DE CUSTO DESPROPORCIONAL OU ZERADO"))
-    .otherwise(pl.lit("OK"))
-    .alias("Custo_da_Peca_Classificado")
-)
-
-# Ajustar valor de custo quando for desproporcional
-df_raw = df_raw.with_columns(
-    pl.when(
-        pl.col("Custo_da_Peca_Classificado")
-        == "VALOR DE CUSTO DESPROPORCIONAL OU ZERADO"
-    )
-    .then(pl.lit(0))
-    .otherwise(pl.col("Custo_da_Peca"))
-    .alias("Custo_da_Peca_Ajustado")
-)
 
 # Recalcular lucro da venda
 df_raw = df_raw.with_columns(
@@ -242,6 +224,14 @@ df_raw = df_raw.with_columns(
     .alias("Margem_da_Venda_Recalculado")
 )
 
+# Classificar valor de custo desproporcionais
+df_raw = df_raw.with_columns(
+    pl.when(pl.col("Custo_da_Peca") > 400000)
+    .then(pl.lit("VALOR DE CUSTO DESPROPORCIONAL"))
+    .otherwise(pl.lit("OK"))
+    .alias("Custo_da_Peca_Classificado")
+)
+
 
 # Classificar devoluções com lucro
 df_raw = df_raw.with_columns(
@@ -255,18 +245,13 @@ df_raw = df_raw.with_columns(
 )
 
 # Classificar registros com valor de custo igual a 0
-# df_raw = df_raw.with_columns(
-#     pl.when(pl.col("Custo_da_Peca") == 0)
-#     .then(pl.lit("VALOR DE CUSTO IGUAL A 0"))
-#     .otherwise(pl.col("Custo_da_Peca_Classificado"))
-#     .alias("Custo_da_Peca_Classificado")
-# )
+df_raw = df_raw.with_columns(
+    pl.when(pl.col("Custo_da_Peca") == 0)
+    .then(pl.lit("VALOR DE CUSTO IGUAL A 0"))
+    .otherwise(pl.lit("OK"))
+    .alias("Custo_da_Peca_Classificado")
+)
 
-# print(
-#     df_raw[
-#         "Custo_da_Peca", "Custo_da_Peca_Ajustado", "Custo_da_Peca_Classificado"
-#     ].sort(by="Custo_da_Peca")
-# )
 
 # Classificar linhas como CONFIÁVEIS ou NÃO CONFIÁVEIS conforme a qualidade do registro
 df_raw = df_raw.with_columns(
@@ -282,10 +267,7 @@ df_raw = df_raw.with_columns(
 
 
 # Renomear colunas para minusculas
-
-
 df_raw = df_raw.rename(str.lower)
-
 
 # endregion
 
@@ -312,15 +294,17 @@ file_name_trusted: str = f"historico-venda-pecas-trusted-{time_now}.parquet"
 
 file = os.listdir(TRUSTED_FOLDER_PATH)[0]
 test: pl.DataFrame = pl.read_parquet(source=TRUSTED_FOLDER_PATH / file)
-print(file)
 
+print("usando arquivo: " + file)
+print(test)
 print(
-    "TEST DF",
     test[
         "custo_da_peca",
         "custo_da_peca_ajustado",
         "custo_da_peca_classificado",
-    ].sort(by="custo_da_peca"),
+        "lucro_da_venda_recalculado",
+        "lucro_da_venda_ajustado",
+        "lucro_da_venda_classificado",
+    ].sort(by="custo_da_peca", descending=True)
 )
-
 # endregion

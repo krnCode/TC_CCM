@@ -39,7 +39,7 @@ def read_parquet() -> pl.DataFrame:
 
 
 # region ----- Introdução -----
-st.title("Estoque de Peças")
+st.title("Histórico de Serviços")
 st.write(
     """
         Nesta página são apresentados os dados brutos do historico de serviços.
@@ -132,12 +132,13 @@ st.write(
     """
 )
 
-coluna_escolhida = st.selectbox("Selecione uma coluna", df.columns)
+coluna_escolhida = st.selectbox(
+    "Selecione uma coluna", df.columns, key="coluna_escolhida"
+)
 
 top10 = df[coluna_escolhida].value_counts().sort("count", descending=True).head(10)
 
 st.bar_chart(top10.to_pandas().set_index(coluna_escolhida))
-
 st.divider()
 
 # endregion
