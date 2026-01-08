@@ -31,7 +31,6 @@ CAMADA_RAW_PATH: Path = (
 parquet_file = os.listdir(CAMADA_RAW_PATH)[0]
 
 
-@st.cache_data
 def read_parquet() -> pl.DataFrame:
     return pl.read_parquet(source=CAMADA_RAW_PATH / parquet_file)
 
@@ -71,6 +70,9 @@ col1, col2, col3, col4 = st.columns(spec=4, gap="small")
 with col1:
     st.metric("Total de linhas", df.height, border=True)
 
+    duplicadas = df.is_duplicated().sum()
+    st.metric("Linhas duplicadas", duplicadas, border=True)
+
 with col2:
     st.metric("Valores únicos por linha", df.n_unique(), border=True)
 
@@ -85,3 +87,57 @@ with col4:
     )
 
 st.divider()
+# endregion
+
+
+# region ----- Visualizações -----
+st.subheader("Visualizações")
+
+st.write(" #### Cardinalidade por Coluna")
+st.write(
+    """
+        A cardinalidade é a quantidade de valores únicos que uma coluna tem.
+        A ideia é que quanto mais a cardinalidade seja maior, mais valores únicos a coluna tem.
+        Desta forma, podemos avaliar a existência de chaves primárias. 
+    """
+)
+
+card = df.select([pl.col(c).n_unique().alias(c) for c in df.columns]).transpose(
+    include_header=True, header_name="Coluna", column_names=["Cardinalidade"]
+)
+
+st.bar_chart(data=card, x="Coluna", y="Cardinalidade")
+
+
+st.write(" #### Percentual de Nulos / Vazios por Coluna")
+st.write(
+    """
+        Evidencia o percentual de valores nulos ou vazios em cada coluna. Assim podemos
+        avaliar a existência de valores faltantes em dados críticos.
+    """
+)
+
+nulls = df.select(
+    [((pl.col(c).is_null() | (pl.col(c) == ""))).mean().alias(c) for c in df.columns]
+).transpose(include_header=True, header_name="Coluna", column_names=["Percentual"])
+
+st.bar_chart(nulls, x="Coluna", y="Percentual")
+
+
+st.write(" #### Top 10 Valores por Coluna")
+st.write(
+    """
+        Este gráfico apresenta os 10 valores mais comuns em cada coluna, e assim
+        conseguimos avaliar a distribuição de dados.
+    """
+)
+
+coluna_escolhida = st.selectbox("Selecione uma coluna", df.columns)
+
+top10 = df[coluna_escolhida].value_counts().sort("count", descending=True).head(10)
+
+st.bar_chart(top10.to_pandas().set_index(coluna_escolhida))
+
+st.divider()
+
+# endregion
