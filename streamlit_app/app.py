@@ -11,6 +11,28 @@ pgs: dict = {
     "DATASETS INICIAIS": [
         st.Page(title="Datasets", page="./app_pages/view_datasets/datasets.py"),
     ],
+    "CAMARA RAW": [
+        st.Page(
+            title="Estoque de Peças",
+            page="./app_pages/camada_raw/estoque_pecas_raw_page.py",
+        ),
+        st.Page(
+            title="Estoque de Veículos",
+            page="./app_pages/camada_raw/estoque_veiculos_raw_page.py",
+        ),
+        st.Page(
+            title="Historico de Serviços",
+            page="./app_pages/camada_raw/historico_servicos_raw_page.py",
+        ),
+        st.Page(
+            title="Historico de Vendas de Peças",
+            page="./app_pages/camada_raw/historico_venda_pecas_raw_page.py",
+        ),
+        st.Page(
+            title="Historico de Vendas de Veículos",
+            page="./app_pages/camada_raw/historico_venda_veiculos_raw_page.py",
+        ),
+    ],
 }
 
 pages = st.navigation(pgs)
